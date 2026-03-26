@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>∞ COSMOS CRAFT</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#03030a;
+  --panel:rgba(6,6,18,0.97);
+  --panel2:rgba(10,10,25,0.95);
+  --border:rgba(80,50,160,0.25);
+  --text:#ccc4e8;
+  --muted:#4a4468;
+  --accent:#7c4dff;
+  --gold:#f59e0b;
+  --sidebar:260px;
+  --topbar:54px;
+}
+
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  flex-direction:column;
+  cursor:default;
+  user-select:none;
+}
+
+/* ── STARFIELD ─────────────────────────────── */
+#starfield{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.star{
+  position:absolute;border-radius:50%;background:#fff;
+  animation:twinkle var(--d,3s) var(--del,0s) ease-in-out infinite;
+}
+@keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:var(--op,.8);transform:scale(1.5)}}
+
+/* Aurora */
+#aurora{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 40% at 15% 90%,rgba(124,77,255,.06) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 30% at 85% 10%,rgba(236,72,153,.05) 0%,transparent 60%);
+}
+
+/* ── TOPBAR ─────────────────────────────────── */
+#topbar{
+  height:var(--topbar);
+  display:flex;align-items:center;gap:12px;padding:0 18px;
+  background:var(--panel);
+  border-bottom:1px solid var(--border);
+  position:relative;z-index:100;flex-shrink:0;
+  box-shadow:0 2px 40px rgba(0,0,0,.5);
+}
+
+.logo{
+  font-family:'Orbitron',sans-serif;font-weight:900;font-size:1rem;
+  letter-spacing:.18em;white-space:nowrap;flex-shrink:0;
+  background:linear-gradient(90deg,#7c4dff,#ec4899,#f59e0b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 12px rgba(124,77,255,.4));
+}
+
+/* Mode tabs */
+.modes{display:flex;gap:3px;flex:1;justify-content:center;overflow:auto}
+.modes::-webkit-scrollbar{display:none}
+
+.m-tab{
+  padding:5px 12px;border-radius:6px;border:1px solid transparent;
+  background:transparent;color:var(--muted);
+  font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:600;
+  letter-spacing:.08em;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.m-tab:hover{color:var(--text);border-color:var(--border)}
+.m-tab.active{background:rgba(124,77,255,.15);border-color:rgba(124,77,255,.5);color:#a78bfa}
+.m-tab.danger.active{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.5);color:#f87171}
+.m-tab.cosmos.active{background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.5);color:#93c5fd}
+.m-tab.tech.active{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:#86efac}
+.m-tab.mytho.active{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.5);color:#fcd34d}
+
+/* Stats */
+.tb-stats{display:flex;gap:14px;font-size:.78rem;color:var(--muted);flex-shrink:0}
+.tb-stat strong{color:var(--text)}
+
+.tb-btn{
+  padding:4px 12px;border:1px solid var(--border);border-radius:6px;
+  background:transparent;color:var(--muted);
+  font-family:'Rajdhani',sans-serif;font-size:.78rem;cursor:pointer;
+  transition:all .2s;flex-shrink:0;
+}
+.tb-btn:hover{border-color:rgba(239,68,68,.5);color:#f87171}
+
+/* ── APP BODY ────────────────────────────────── */
+#app{display:flex;flex:1;overflow:hidden;position:relative;z-index:1}
+
+/* ── SIDEBAR ─────────────────────────────────── */
+#sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+
+.sb-head{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+  font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+}
+.sb-count{
+  margin-left:auto;
+  background:rgba(124,77,255,.18);border:1px solid rgba(124,77,255,.35);color:#a78bfa;
+  border-radius:20px;padding:1px 9px;font-size:.68rem;
+}
+
+.sb-search{padding:8px 10px;border-bottom:1px solid var(--border)}
+.sb-search input{
+  width:100%;background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:6px;padding:6px 10px;color:var(--text);
+  font-family:'Rajdhani',sans-serif;font-size:.88rem;outline:none;
+  transition:border-color .2s;
+}
+.sb-search input:focus{border-color:rgba(124,77,255,.5)}
+.sb-search input::placeholder{color:var(--muted)}
+
+#sb-list{
+  flex:1;overflow-y:auto;padding:7px;display:flex;flex-direction:column;gap:2px;
+}
+#sb-list::-webkit-scrollbar{width:3px}
+#sb-list::-webkit-scrollbar-thumb{background:rgba(124,77,255,.3);border-radius:2px}
+
+.sb-item{
+  display:flex;align-items:center;gap:8px;padding:7px 10px;
+  border-radius:7px;border:1px solid transparent;
+  background:rgba(255,255,255,.02);cursor:grab;transition:all .15s;
+  position:relative;
+}
+.sb-item:hover{background:rgba(255,255,255,.05);border-color:var(--border);transform:translateX(2px)}
+.sb-item:active{cursor:grabbing}
+
+.sb-emoji{font-size:1.2rem;width:24px;text-align:center;flex-shrink:0;line-height:1}
+.sb-name{font-size:.88rem;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* Rarity colors */
+.r0{background:#4b5563}.r1{background:#3b82f6}.r2{background:#a855f7}.r3{background:#f59e0b}.r4{background:#ec4899}.rd{background:#ef4444}
+
+.sb-item.flash{animation:sbflash 2s ease-out forwards}
+@keyframes sbflash{
+  0%{background:rgba(124,77,255,.35);border-color:rgba(124,77,255,.7)}
+  100%{background:rgba(255,255,255,.02);border-color:transparent}
+}
+
+/* ── CANVAS ──────────────────────────────────── */
+#canvas-wrap{
+  flex:1;position:relative;overflow:hidden;
+  background-image:
+    linear-gradient(rgba(80,50,160,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(80,50,160,.06) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+
+#canvas-hint{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;pointer-events:none;opacity:.35;transition:opacity .6s;
+}
+#canvas-hint.hide{opacity:0}
+.hint-big{font-size:3.5rem;margin-bottom:10px;display:block;animation:floatHint 4s ease-in-out infinite}
+@keyframes floatHint{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#canvas-hint p{font-size:.88rem;color:var(--muted);line-height:1.8;letter-spacing:.05em}
+
+/* ── CANVAS CARDS ────────────────────────────── */
+.c-card{
+  position:absolute;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;padding:10px 14px;min-width:88px;
+  border-radius:10px;border:1px solid var(--rc,#4b5563);
+  background:rgba(6,6,18,.92);
+  box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 12px color-mix(in srgb,var(--rc,#4b5563) 25%,transparent);
+  cursor:grab;transition:box-shadow .2s,border-color .2s;
+  backdrop-filter:blur(12px);z-index:10;
+}
+.c-card:hover{
+  box-shadow:0 6px 32px rgba(0,0,0,.7),0 0 22px color-mix(in srgb,var(--rc,#4b5563) 50%,transparent);
+  z-index:20;
+}
+.c-card.dragging{
+  cursor:grabbing;z-index:200;transition:none;
+  box-shadow:0 16px 60px rgba(0,0,0,.9),0 0 40px color-mix(in srgb,var(--rc,#4b5563) 70%,transparent);
+  transform:scale(1.06);
+}
+.c-card.will-combine{
+  border-color:#fff !important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.5),0 0 40px rgba(255,255,255,.3) !important;
+  animation:pulse-card .4s ease-in-out infinite alternate;
+}
+@keyframes pulse-card{from{transform:scale(1)}to{transform:scale(1.08)}}
+
+.c-card.combining{animation:combine-out .25s ease-in forwards}
+@keyframes combine-out{to{transform:scale(0) rotate(180deg);opacity:0}}
+
+.c-emoji{font-size:1.7rem;line-height:1;pointer-events:none}
+.c-name{font-size:.72rem;font-weight:600;letter-spacing:.04em;white-space:nowrap;color:var(--text);max-width:100px;text-align:center;pointer-events:none}
+.c-del{
+  position:absolute;top:2px;right:5px;font-size:.58rem;color:var(--muted);
+  cursor:pointer;opacity:0;transition:opacity .15s;line-height:1;
+}
+.c-card:hover .c-del{opacity:1}
+
+/* Rarity card colors */
+.c-r0{--rc:#4b5563}.c-r1{--rc:#3b82f6}.c-r2{--rc:#a855f7}.c-r3{--rc:#f59e0b}
+.c-r4{--rc:#ec4899;animation:rainbow-border 3s linear infinite}
+.c-rd{--rc:#ef4444;box-shadow:0 0 20px rgba(239,68,68,.3) !important}
+@keyframes rainbow-border{
+  0%{border-color:#ec4899}25%{border-color:#f59e0b}
+  50%{border-color:#7c4dff}75%{border-color:#3b82f6}100%{border-color:#ec4899}
+}
+
+/* ── PARTICLES ───────────────────────────────── */
+.spark{
+  position:fixed;pointer-events:none;border-radius:50%;z-index:500;
+  animation:spark-fly var(--sd,.8s) ease-out forwards;
+}
+@keyframes spark-fly{
+  0%{opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:var(--se,translate(40px,-40px)) scale(0)}
+}
+.floaty{
+  position:fixed;pointer-events:none;z-index:501;font-size:1.6rem;
+  animation:floaty-up 1s ease-out forwards;
+}
+@keyframes floaty-up{
+  0%{opacity:1;transform:translate(0,0) scale(1)}
+  100%{opacity:0;transform:translateY(-90px) scale(.4)}
+}
+
+/* ── TOAST ───────────────────────────────────── */
+#toast{
+  position:fixed;top:64px;right:18px;
+  background:rgba(6,6,18,.98);
+  border:1px solid var(--border);
+  border-radius:12px;padding:13px 18px;
+  display:flex;align-items:center;gap:12px;
+  min-width:270px;max-width:340px;
+  z-index:900;
+  transform:translateX(120%);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  backdrop-filter:blur(20px);
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
+#toast.show{transform:translateX(0)}
+#toast.t-new{border-color:rgba(124,77,255,.6);box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 30px rgba(124,77,255,.2)}
+#toast.t-danger{border-color:rgba(239,68,68,.7);box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 30px rgba(239,68,68,.3)}
+#toast.t-legend{border-color:rgba(245,158,11,.7);box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 40px rgba(245,158,11,.35)}
+
+.t-emoji{font-size:2.4rem;flex-shrink:0}
+.t-body{flex:1;min-width:0}
+.t-label{font-size:.62rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.t-label.lnew{color:#a78bfa}.t-label.ldanger{color:#f87171}.t-label.llegend{color:#fcd34d}
+.t-name{font-family:'Orbitron',sans-serif;font-size:.95rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-desc{font-size:.78rem;color:var(--muted);font-style:italic;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── EPIC MODAL ──────────────────────────────── */
+#modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);
+  z-index:950;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+  backdrop-filter:blur(6px);
+}
+#modal-overlay.show{opacity:1;pointer-events:auto}
+
+#modal{
+  background:radial-gradient(ellipse at top,#180830 0%,#06060f 70%);
+  border:1px solid rgba(124,77,255,.55);
+  border-radius:20px;padding:48px 56px;text-align:center;
+  max-width:380px;width:90%;
+  transform:scale(.8);transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 0 100px rgba(124,77,255,.25),0 40px 100px rgba(0,0,0,.8);
+}
+#modal-overlay.show #modal{transform:scale(1)}
+
+#m-emoji{font-size:5rem;display:block;margin-bottom:14px;animation:mfloat 2.5s ease-in-out infinite}
+@keyframes mfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+#m-badge{
+  display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.25em;
+  text-transform:uppercase;padding:3px 14px;border-radius:20px;
+  background:rgba(124,77,255,.2);border:1px solid rgba(124,77,255,.5);
+  color:#c4b5fd;margin-bottom:14px;
+}
+#m-name{
+  font-family:'Orbitron',sans-serif;font-size:1.7rem;font-weight:900;
+  background:linear-gradient(135deg,#f59e0b,#ec4899,#7c4dff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:10px;
+}
+#m-desc{color:var(--muted);font-style:italic;line-height:1.6;font-size:.92rem;margin-bottom:22px}
+#m-close{
+  font-family:'Rajdhani',sans-serif;font-size:.82rem;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;
+  padding:9px 28px;background:rgba(124,77,255,.2);
+  border:1px solid rgba(124,77,255,.5);color:#c4b5fd;
+  border-radius:8px;cursor:pointer;transition:all .2s;
+}
+#m-close:hover{background:rgba(124,77,255,.35);box-shadow:0 0 20px rgba(124,77,255,.3)}
+
+/* ── SCREEN SHAKE ────────────────────────────── */
+@keyframes shake{
+  0%,100%{transform:translate(0,0)}
+  10%{transform:translate(-4px,2px)}
+  20%{transform:translate(4px,-2px)}
+  30%{transform:translate(-3px,4px)}
+  40%{transform:translate(3px,-3px)}
+  50%{transform:translate(-4px,1px)}
+  60%{transform:translate(4px,1px)}
+  70%{transform:translate(-2px,-2px)}
+  80%{transform:translate(2px,2px)}
+  90%{transform:translate(-2px,-1px)}
+}
+.shaking{animation:shake .35s ease-out}
+
+/* ── RESULT FLASH ────────────────────────────── */
+.result-flash{
+  position:fixed;inset:0;pointer-events:none;z-index:490;
+  background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(255,255,255,.12) 0%,transparent 70%);
+  animation:flash-out .4s ease-out forwards;
+}
+@keyframes flash-out{0%{opacity:1}100%{opacity:0}}
+
+/* ── MODE INDICATOR ──────────────────────────── */
+#mode-bar{
+  position:absolute;bottom:14px;right:16px;
+  display:flex;align-items:center;gap:7px;
+  font-size:.72rem;font-weight:600;letter-spacing:.1em;
+  color:var(--muted);pointer-events:none;
+  background:rgba(6,6,18,.8);border:1px solid var(--border);
+  border-radius:8px;padding:5px 12px;
+  backdrop-filter:blur(8px);
+}
+#mode-bar .mode-dot{width:7px;height:7px;border-radius:50%}
+</style>
+</head>
+<body>
+
+<div id="starfield"></div>
+<div id="aurora"></div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="logo">∞ COSMOS CRAFT</div>
+
+  <div class="modes">
+    <button class="m-tab active" onclick="setMode('normal')" data-mode="normal">⚗️ Alchimie</button>
+    <button class="m-tab danger" onclick="setMode('danger')" data-mode="danger">☠️ Danger</button>
+    <button class="m-tab cosmos" onclick="setMode('cosmos')" data-mode="cosmos">🌌 Cosmos</button>
+    <button class="m-tab tech" onclick="setMode('tech')" data-mode="tech">⚡ Tech</button>
+    <button class="m-tab mytho" onclick="setMode('mytho')" data-mode="mytho">🐉 Mythes</button>
+  </div>
+
+  <div class="tb-stats">
+    <div class="tb-stat">Découverts: <strong id="stat-count">4</strong></div>
+  </div>
+  <button class="tb-btn" onclick="clearCanvas()">🗑 Nettoyer</button>
+  <button class="tb-btn" onclick="resetGame()" style="border-color:rgba(239,68,68,.3)">↺ Reset</button>
+</div>
+
+<!-- APP BODY -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-head">
+      📖 Grimoire
+      <span class="sb-count" id="sb-count">4</span>
+    </div>
+    <div class="sb-search">
+      <input type="text" placeholder="Rechercher..." id="sb-search" oninput="filterSidebar(this.value)">
+    </div>
+    <div id="sb-list"></div>
+  </div>
+
+  <!-- CANVAS -->
+  <div id="canvas-wrap">
+    <div id="canvas-hint">
+      <span class="hint-big">⚗</span>
+      <p>Glisse des éléments ici depuis le grimoire<br>
+      Pose un élément <strong>sur un autre</strong> pour les combiner</p>
+    </div>
+
+    <div id="mode-bar">
+      <div class="mode-dot" id="mode-dot" style="background:#7c4dff"></div>
+      <span id="mode-label">Mode Alchimie</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">
+  <div class="t-emoji" id="t-emoji">✨</div>
+  <div class="t-body">
+    <div class="t-label" id="t-label">Nouvelle découverte</div>
+    <div class="t-name" id="t-name">Vapeur</div>
+    <div class="t-desc" id="t-desc"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal-overlay">
+  <div id="modal">
+    <span id="m-emoji">🌟</span>
+    <div id="m-badge">✦ DÉCOUVERTE LÉGENDAIRE</div>
+    <div id="m-name">Résultat</div>
+    <div id="m-desc">Une combinaison extraordinaire.</div>
+    <button id="m-close" onclick="closeModal()">Continuer ↩</button>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   COSMOS CRAFT — Built-in Engine v2.0
+   ════════════════════════════════════════════════════ */
+
+// ── UTILITIES ────────────────────────────────────────
+function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim() }
+function ck(a,b){ return [norm(a),norm(b)].sort().join('|') }
+
+// ── COMBINATION DATABASE ─────────────────────────────
+const COMBOS = {};
+function C(a,b,n,e,r=0,d='',danger=false){
+  COMBOS[ck(a,b)]={name:n,emoji:e,rarity:r,desc:d,danger};
+}
+
+// 0=commun 1=rare 2=epique 3=legendaire 4=mythique  danger=☠
+
+// BASE
+C('Feu','Eau','Vapeur','♨️',0,"L'eau rencontre le feu");
+C('Feu','Terre','Lave','🌋',0,"La roche en fusion");
+C('Feu','Vent','Soleil','☀️',1,"Lumière et chaleur éternelles");
+C('Eau','Terre','Boue','🟤',0,"La terre humide");
+C('Eau','Vent','Pluie','🌧️',0,"Le ciel pleure");
+C('Terre','Vent','Poussière','🌫️',0,"La terre s'envole");
+
+// VAPEUR
+C('Vapeur','Eau','Nuage','☁️',0,"L'eau monte dans les airs");
+C('Vapeur','Vent','Brouillard','🌁',0,"La visibilité disparaît");
+C('Vapeur','Feu','Explosion','💥',2,"La pression explose",true);
+C('Vapeur','Froid','Givre','🌨️',1,"Des cristaux sur les surfaces");
+
+// LAVE
+C('Lave','Eau','Roche','🪨',0,"Le magma se solidifie");
+C('Lave','Vent','Cendres','🌫️',0,"Les débris volcaniques");
+C('Lave','Lave','Volcan','🌋',2,"La montagne en feu");
+C('Lave','Mer','Île volcanique','🏝️',2,"Née des profondeurs");
+
+// BOUE
+C('Boue','Feu','Brique','🧱',0,"La terre cuite");
+C('Boue','Vent','Sable','🏖️',0,"La poussière de la terre");
+C('Boue','Soleil','Plante','🌱',0,"La vie qui germe");
+
+// ROCHE
+C('Roche','Roche','Montagne','⛰️',1,"Immovable et éternelle");
+C('Roche','Eau','Sable','🏖️',0,"L'érosion du temps");
+C('Roche','Feu','Métal','⚙️',1,"La roche forgée");
+C('Roche','Vent','Poussière','🌫️',0,"La roche s'effrite");
+C('Roche','Plante','Mousse','🌿',0,"La vie sur la pierre");
+C('Roche','Foudre','Cristal','💎',2,"La foudre dans la roche");
+
+// SABLE
+C('Sable','Feu','Verre','🪟',2,"Le sable fondu");
+C('Sable','Vent','Désert','🏜️',1,"Un océan de sable");
+C('Sable','Eau','Limon','🟡',0,"Le lit de rivière");
+
+// NUAGE
+C('Nuage','Nuage','Tempête','⛈️',1,"Les nuages s'accumulent");
+C('Nuage','Froid','Neige','❄️',1,"Des cristaux de glace");
+C('Nuage','Foudre','Orage','⛈️',1,"Le ciel en colère");
+
+// PLUIE
+C('Pluie','Soleil','Arc-en-ciel','🌈',2,"Les couleurs du ciel");
+C('Pluie','Vent','Tempête','⛈️',1,"La furie des éléments");
+C('Pluie','Froid','Neige','❄️',1,"Des flocons blancs");
+C('Pluie','Montagne','Rivière','🏞️',1,"La cascade qui dévale");
+
+// NEIGE
+C('Neige','Soleil','Eau','💧',0,"La neige qui fond");
+C('Neige','Neige','Glacier','🏔️',2,"Une montagne de glace");
+C('Neige','Vent','Blizzard','🌨️',2,"La tempête de neige",true);
+C('Neige','Feu','Eau','💧',0,"La chaleur fait fondre");
+
+// TEMPÊTE
+C('Tempête','Feu','Foudre','⚡',2,"L'électricité du ciel");
+C('Tempête','Mer','Tsunami','🌊',3,"La vague dévastatrice",true);
+C('Tempête','Désert','Tempête de sable','🌪️',2,"Un mur de sable",true);
+
+// FOUDRE
+C('Foudre','Eau','Électrocution','⚡💧',2,"Danger mortel",true);
+C('Foudre','Métal','Circuit','💻',2,"Le courant traverse");
+C('Foudre','Sable','Verre','🪟',2,"La foudre vitrifie");
+C('Foudre','Boue','Vie','💚',4,"L'étincelle primordiale");
+C('Foudre','Terre','Séisme','🌐',2,"La terre tremble",true);
+C('Foudre','Nuage','Orage électrique','🌩️',2,"La tempête fait rage");
+
+// MÉTAL
+C('Métal','Feu','Acier','🔩',1,"Forgé dans les flammes");
+C('Métal','Eau','Rouille','🔴',0,"Le métal vieilli");
+C('Métal','Métal','Armure','⚔️',1,"La protection ultime");
+C('Métal','Vent','Épée','⚔️',1,"La lame tranchante");
+C('Métal','Électricité','Circuit','💻',2,"La technologie naît");
+
+// VERRE
+C('Verre','Feu','Lumière','💡',1,"La lumière traverse");
+C('Verre','Lumière','Prisme','🔮',2,"Les couleurs séparées");
+C('Verre','Roche','Miroir','🪞',1,"Le reflet parfait");
+
+// PLANTE
+C('Plante','Eau','Algue','🌿',0,"La plante aquatique");
+C('Plante','Feu','Charbon','⚫',0,"Calcinée par les flammes");
+C('Plante','Vent','Graine','🌰',0,"Portée par le vent");
+C('Plante','Plante','Forêt','🌲',1,"La forêt primordiale");
+C('Plante','Soleil','Arbre','🌳',1,"La croissance solaire");
+C('Plante','Nuit','Champignon','🍄',1,"La plante de l'ombre");
+C('Plante','Poison','Plante carnivore','🌿💀',3,"Elle dévore",true);
+
+// FORÊT
+C('Forêt','Eau','Jungle','🌴',1,"Dense et humide");
+C('Forêt','Feu','Incendie','🔥',2,"La forêt brûle",true);
+
+// ARBRE
+C('Arbre','Vent','Bois','🪵',0,"Le matériau primaire");
+C('Arbre','Feu','Charbon','⚫',0,"Calciné");
+C('Arbre','Métal','Hache','🪓',1,"La forêt tombe");
+
+// GRAINE
+C('Graine','Eau','Fleur','🌸',1,"La beauté s'éveille");
+C('Graine','Terre','Arbre','🌳',1,"Racines profondes");
+
+// FLEUR
+C('Fleur','Vent','Pollen','🌼',0,"La vie voyage");
+C('Fleur','Fleur','Jardin','🏡',1,"Un paradis fleuri");
+C('Fleur','Eau','Parfum','🌸',1,"L'essence de la fleur");
+
+// MONTAGNE
+C('Montagne','Eau','Rivière','🏞️',1,"L'eau dévale");
+C('Montagne','Neige','Alpes','🏔️',2,"Les sommets enneigés");
+C('Montagne','Vent','Tempête de montagne','🌪️',2,"La fureur alpine");
+
+// MER/OCÉAN
+C('Eau','Eau','Lac','🏞️',0,"Les eaux stagnantes");
+C('Lac','Mer','Océan','🌊',1,"L'immensité bleue");
+C('Mer','Vent','Vague','🌊',1,"Les flots agités");
+C('Mer','Feu','Sel','🧂',0,"L'évaporation marine");
+C('Mer','Soleil','Corail','🪸',2,"La vie sous-marine");
+C('Océan','Vie','Kraken','🦑',3,"La créature abyssale");
+C('Mer','Lune','Marée','🌊',1,"L'attraction lunaire");
+
+// VIE
+C('Vie','Eau','Poisson','🐟',1,"La première créature");
+C('Vie','Terre','Ver','🪱',0,"Le laboureur des sols");
+C('Vie','Vent','Oiseau','🐦',1,"La liberté ailée");
+C('Vie','Feu','Dragon','🐉',4,"La créature légendaire");
+C('Vie','Nuit','Chauve-souris','🦇',1,"La créature de l'ombre");
+C('Vie','Boue','Humain','👤',3,"La créature pensante");
+C('Vie','Roche','Dinosaure','🦕',3,"L'ancien monde");
+C('Vie','Glace','Mammouth','🦣',3,"L'ère glaciaire");
+C('Vie','Virus','Pandémie','🦠',3,"La maladie se répand",true);
+
+// HUMAIN
+C('Humain','Feu','Cuisinier','👨‍🍳',1,"Maître du feu");
+C('Humain','Eau','Pêcheur','🎣',1,"Chasseur des mers");
+C('Humain','Métal','Guerrier','⚔️',1,"Né pour combattre");
+C('Humain','Magie','Sorcier','🧙',3,"Maître des arcanes");
+C('Humain','Science','Scientifique','🔬',2,"Chercheur de vérité");
+C('Humain','Humain','Village','🏘️',2,"La communauté naît");
+C('Humain','Mort','Fantôme','👻',2,"Entre deux mondes");
+C('Humain','Foudre','Surhomme','⚡👤',3,"Transcendé par la foudre");
+C('Humain','Dragon','Chevalier dragon','🐉⚔️',4,"La légende incarnée");
+
+// VILLAGE
+C('Village','Village','Ville','🏙️',2,"La cité s'étend");
+C('Village','Feu','Ruines','🏚️',1,"La destruction",true);
+
+// VILLE
+C('Ville','Technologie','Mégapole','🌆',3,"L'empire urbain");
+C('Ville','Guerre','Capitale en ruines','💥',3,"La chute d'une civilisation",true);
+
+// OISEAU
+C('Oiseau','Feu','Phénix','🦅',4,"L'oiseau immortel renaît");
+C('Oiseau','Oiseau','Nuée','🐦🐦',1,"Mille ailes");
+C('Oiseau','Vent','Aigle','🦅',2,"Le roi des airs");
+C('Oiseau','Lumière','Angel','👼',3,"La créature céleste");
+
+// POISSON
+C('Poisson','Poisson','Banc de poissons','🐠',1,"Des milliers de poissons");
+C('Poisson','Mer','Baleine','🐋',2,"La reine des océans");
+C('Poisson','Magie','Sirène','🧜',3,"La créature mythique");
+
+// DRAGON
+C('Dragon','Feu','Seigneur des flammes','🐉🔥',4,"La puissance absolue");
+C('Dragon','Glace','Dragon de glace','🐉❄️',4,"Le froid incarné");
+C('Dragon','Mort','Dragon nécromant','💀🐉',4,"L'horreur ultime",true);
+
+// LUMIÈRE/OBSCURITÉ
+C('Lumière','Obscurité','Magie','🔮',3,"L'équilibre des forces");
+C('Lumière','Lumière','Laser','🔆',2,"Concentrée à l'extrême");
+C('Lumière','Roche','Cristal','💎',2,"La roche irradiée");
+C('Obscurité','Feu','Étoile','⭐',2,"Une lumière dans l'obscurité");
+C('Obscurité','Magie','Malédiction','🖤',3,"La magie noire",true);
+C('Obscurité','Vie','Créature des ténèbres','👿',2,"La peur incarnée");
+C('Feu','Nuit','Étoile','⭐',2,"Lumière dans la nuit");
+
+// NUIT/LUNE
+C('Soleil','Nuit','Eclipse','🌑',3,"L'ombre sur la lumière");
+C('Lune','Eau','Marée','🌊',1,"L'attraction lunaire");
+C('Lune','Magie','Lycanthrope','🐺',3,"La créature lunaire");
+C('Nuit','Nuit','Cosmos','🌌',2,"L'infini nocturne");
+
+// MAGIE
+C('Magie','Feu','Boule de feu','🔥✨',3,"La destruction magique");
+C('Magie','Eau','Potion','🧪',2,"L'élixir enchanté");
+C('Magie','Vent','Téléportation','✨',3,"Traverser l'espace");
+C('Magie','Mort','Nécromancie','💀✨',4,"Ramener les morts",true);
+C('Magie','Magie','Singularité magique','🌀✨',4,"Le point de rupture");
+C('Magie','Vie','Création divine','✨💚',4,"Le miracle suprême");
+C('Magie','Temps','Voyageur du temps','⏳✨',4,"Maître du continuum");
+
+// COSMOS
+C('Étoile','Étoile','Galaxie','🌌',3,"Des milliards d'étoiles");
+C('Étoile','Roche','Planète','🪐',2,"Un monde nouveau");
+C('Étoile','Explosion','Supernova','💥⭐',4,"La mort stellaire",true);
+C('Étoile','Nuit','Univers','🌌',4,"L'infini absolu");
+C('Planète','Vie','Écosystème','🌍',3,"La vie s'épanouit");
+C('Galaxie','Galaxie','Univers','🌌',4,"La totalité de l'existence");
+C('Roche','Vide','Astéroïde','☄️',2,"Un projectile cosmique");
+C('Astéroïde','Planète','Extinction','💥',3,"L'impact fatal",true);
+C('Vide','Vide','Trou noir','🕳️',4,"Rien n'échappe",true);
+C('Trou noir','Planète','Apocalypse cosmique','🌌💀',4,"La fin de tout",true);
+C('Soleil','Soleil','Étoile géante','🌟',3,"Plus grande, plus brillante");
+C('Cosmos','Vie','Extraterrestre','👽',3,"Une vie venue d'ailleurs");
+
+// TECH
+C('Circuit','Circuit','Ordinateur','💻',2,"Le cerveau numérique");
+C('Ordinateur','Vie','IA','🤖',4,"L'intelligence artificielle");
+C('Ordinateur','Réseau','Internet','🌐',3,"L'ère numérique");
+C('Internet','Internet','Singularité','🧠',4,"L'explosion technologique");
+C('Métal','Science','Machine','⚙️',2,"La mécanique naît");
+C('Machine','Foudre','Robot','🤖',3,"L'automate s'éveille");
+C('Robot','Robot','Armée de robots','🤖🤖',3,"La révolte des machines",true);
+C('IA','IA','Superintelligence','🧠⚡',4,"Au-delà de l'humain");
+C('Science','Vie','Médecine','💊',2,"La guérison");
+C('Science','Foudre','Électronique','📡',2,"La révolution numérique");
+C('Verre','Électricité','Écran','📱',2,"La fenêtre numérique");
+
+// DANGER
+C('Métal','Explosion','Bombe','💣',3,"Le potentiel destructeur",true);
+C('Bombe','Bombe','Arme nucléaire','☢️',4,"La destruction totale",true);
+C('Arme nucléaire','Ville','Apocalypse','💀☢️',4,"La fin de l'humanité",true);
+C('Virus','Humain','Épidémie','🦠',3,"La maladie se répand",true);
+C('Poison','Eau','Eau empoisonnée','☠️',2,"L'eau contaminée",true);
+C('Feu','Poison','Acide','🧪',2,"Brûle tout",true);
+C('Acide','Métal','Corrosion','🔴',2,"Tout se dissout",true);
+C('Radioactivité','Vie','Mutation','🧬',3,"L'ADN altéré",true);
+C('Métal','Radioactivité','Uranium','☢️',3,"L'atome instable",true);
+
+// MYTHOLOGIE
+C('Humain','Divin','Demi-dieu','⚡👤',4,"Le sang des dieux");
+C('Dragon','Dieu','Titan','🌋👑',4,"Au-delà des dragons");
+C('Mort','Vie','Résurrection','✨💀',4,"Le cycle brisé");
+C('Magie','Étoile','Dieu','👑✨',4,"La divinité absolue");
+C('Foudre','Dieu','Zeus','⚡👑',4,"Le roi de l'Olympe");
+C('Mer','Dieu','Poséidon','🌊👑',4,"Seigneur des océans");
+C('Mort','Dieu','Hadès','💀👑',4,"Roi des enfers");
+C('Feu','Dieu','Héphaïstos','🔥👑',4,"Maître du forgeron divin");
+C('Loup','Lune','Loup-garou','🐺🌕',3,"La malédiction lunaire");
+C('Vampire','Nuit','Prince des ténèbres','🧛👑',4,"L'immortel suprême",true);
+
+// DIVERS
+C('Bois','Métal','Hache','🪓',1,"L'outil du bûcheron");
+C('Bois','Bois','Cabane','🏚️',1,"Un refuge de fortune");
+C('Acier','Feu','Forge','🔥⚙️',2,"L'atelier du forgeron");
+C('Sel','Eau','Mer','🌊',1,"L'océan primordial");
+C('Sel','Feu','Cristaux de sel','🧂',1,"Le minéral précieux");
+C('Charbon','Charbon','Diamant','💎',3,"La pression crée la beauté");
+C('Diamant','Lumière','Arc-en-ciel','🌈',2,"La lumière éclatée");
+C('Cristal','Magie','Pierre philosophale','🔮✨',4,"Le rêve des alchimistes");
+C('Miroir','Magie','Portail','🌀',3,"Un passage vers ailleurs");
+C('Sablier','Magie','Contrôle du temps','⏳✨',4,"Maîtrise du continuum");
+C('Potion','Feu','Potion explosive','💥🧪',3,"Boire avec précaution",true);
+C('Cendres','Vie','Phénix','🦅',4,"Renaître des cendres");
+C('Cendres','Magie','Fantôme','👻',2,"L'esprit qui reste");
+
+// ── STARTING ELEMENTS PER MODE ───────────────────────
+const MODES = {
+  normal: {
+    label:'Mode Alchimie', color:'#7c4dff',
+    starts:[
+      {name:'Feu',emoji:'🔥',rarity:0,desc:'L\'élément primordial'},
+      {name:'Eau',emoji:'💧',rarity:0,desc:'Source de toute vie'},
+      {name:'Terre',emoji:'🌍',rarity:0,desc:'Le sol qui nous porte'},
+      {name:'Vent',emoji:'💨',rarity:0,desc:'L\'air en mouvement'},
+    ]
+  },
+  danger: {
+    label:'Mode Danger ☠', color:'#ef4444',
+    starts:[
+      {name:'Poison',emoji:'☠️',rarity:1,desc:'La mort en bouteille',danger:true},
+      {name:'Feu',emoji:'🔥',rarity:0,desc:'L\'élément destructeur'},
+      {name:'Métal',emoji:'⚙️',rarity:1,desc:'Le métal brut'},
+      {name:'Virus',emoji:'🦠',rarity:2,desc:'L\'infime ennemi',danger:true},
+      {name:'Radioactivité',emoji:'☢️',rarity:3,desc:'L\'atome brisé',danger:true},
+      {name:'Explosion',emoji:'💥',rarity:2,desc:'La déflagration',danger:true},
+    ]
+  },
+  cosmos: {
+    label:'Mode Cosmos 🌌', color:'#3b82f6',
+    starts:[
+      {name:'Étoile',emoji:'⭐',rarity:2,desc:'Un soleil lointain'},
+      {name:'Vide',emoji:'🌑',rarity:1,desc:'Le néant absolu'},
+      {name:'Lumière',emoji:'💡',rarity:1,desc:'La lumière première'},
+      {name:'Obscurité',emoji:'🌑',rarity:1,desc:'L\'absence de lumière'},
+      {name:'Cosmos',emoji:'🌌',rarity:2,desc:'L\'univers observable'},
+      {name:'Roche',emoji:'🪨',rarity:0,desc:'La matière brute'},
+    ]
+  },
+  tech: {
+    label:'Mode Tech ⚡', color:'#22c55e',
+    starts:[
+      {name:'Métal',emoji:'⚙️',rarity:1,desc:'Le métal brut'},
+      {name:'Électricité',emoji:'⚡',rarity:1,desc:'L\'énergie électrique'},
+      {name:'Verre',emoji:'🪟',rarity:1,desc:'Le silice fondu'},
+      {name:'Science',emoji:'🔬',rarity:1,desc:'La méthode scientifique'},
+      {name:'Circuit',emoji:'💻',rarity:2,desc:'Le coeur numérique'},
+      {name:'Réseau',emoji:'🌐',rarity:1,desc:'La connexion'},
+    ]
+  },
+  mytho: {
+    label:'Mode Mythes 🐉', color:'#f59e0b',
+    starts:[
+      {name:'Dragon',emoji:'🐉',rarity:4,desc:'La créature légendaire'},
+      {name:'Magie',emoji:'🔮',rarity:3,desc:'Les arcanes anciens'},
+      {name:'Mort',emoji:'💀',rarity:2,desc:'La grande faucheuse'},
+      {name:'Lune',emoji:'🌕',rarity:1,desc:'L\'astre nocturne'},
+      {name:'Divin',emoji:'👑',rarity:3,desc:'La puissance des dieux'},
+      {name:'Dieu',emoji:'✨👑',rarity:4,desc:'La divinité suprême'},
+    ]
+  },
+};
+
+// ── FALLBACK GENERATOR ──────────────────────────────
+function smartFallback(a, b) {
+  // Category detection
+  const fireWords = /feu|flamme|chaud|brûl|lave|soleil|lumière/i;
+  const waterWords = /eau|mer|pluie|lac|rivière|neige|glace/i;
+  const darkWords = /nuit|mort|obscur|ténèbre|sombre|vampire/i;
+  const techWords = /circuit|robot|machine|électr|numérique/i;
+  const lifeWords = /vie|plante|animal|humain|dragon|oiseau/i;
+
+  let emoji = b.emoji;
+  let rarity = Math.floor(Math.random() * 3);
+  let name = a.name + ' ' + b.name;
+  let desc = `Une fusion mystérieuse de ${a.name} et ${b.name}`;
+
+  // Try to create meaningful combinations based on patterns
+  if (fireWords.test(a.name) && fireWords.test(b.name)) {
+    name = 'Inferno Absolu'; emoji = '🔥🌋'; rarity = 3;
+    desc = 'Le feu amplifié';
+  } else if (waterWords.test(a.name) && darkWords.test(b.name)) {
+    name = 'Abîme noir'; emoji = '🌊🖤'; rarity = 2;
+    desc = 'Les profondeurs obscures';
+  } else if (techWords.test(a.name) && lifeWords.test(b.name)) {
+    name = 'Cyborg'; emoji = '🤖💚'; rarity = 3;
+    desc = 'La frontière entre vie et machine';
+  } else if (darkWords.test(a.name) || darkWords.test(b.name)) {
+    rarity = 2;
+    name = a.name + ' maudit';
+    emoji = '🖤';
+    desc = `Touché par l'obscurité`;
+  } else {
+    // Combine names creatively
+    const parts1 = a.name.split(' ');
+    const parts2 = b.name.split(' ');
+    name = parts1[0] + ' de ' + (parts2[parts2.length-1] || b.name);
+    emoji = b.emoji;
+  }
+
+  return { name, emoji, rarity, desc, danger: false };
+}
+
+// ── GAME STATE ────────────────────────────────────────
+let state = {
+  mode: 'normal',
+  discovered: [],
+  canvasItems: [],
+  nextId: 0,
+  dragging: null,
+  dragOffX: 0,
+  dragOffY: 0,
+};
+
+// ── INIT / SAVE / LOAD ────────────────────────────────
+function initGame(mode='normal') {
+  const savedAll = getSaved();
+  const savedDisc = savedAll[mode] || null;
+
+  const modeData = MODES[mode];
+  if (!savedDisc) {
+    state.discovered = modeData.starts.map(e=>({...e,id:uid()}));
+  } else {
+    state.discovered = savedDisc;
+  }
+  state.canvasItems = [];
+  state.mode = mode;
+
+  renderSidebar();
+  updateModeBar();
+}
+
+function getSaved() {
+  try { return JSON.parse(localStorage.getItem('cc_v2')||'{}'); } catch { return {}; }
+}
+
+function saveState() {
+  const all = getSaved();
+  all[state.mode] = state.discovered;
+  localStorage.setItem('cc_v2', JSON.stringify(all));
+}
+
+function uid() { return ++state.nextId; }
+
+function isKnown(name) {
+  return state.discovered.some(e=>norm(e.name)===norm(name));
+}
+
+// ── MODE MANAGEMENT ────────────────────────────────────
+function setMode(mode) {
+  // Clear canvas
+  clearCanvas();
+  initGame(mode);
+
+  document.querySelectorAll('.m-tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.mode===mode);
+  });
+}
+
+function updateModeBar() {
+  const m = MODES[state.mode];
+  document.getElementById('mode-label').textContent = m.label;
+  document.getElementById('mode-dot').style.background = m.color;
+}
+
+// ── SIDEBAR ────────────────────────────────────────────
+let sbFilter = '';
+
+function renderSidebar(filter='') {
+  const list = document.getElementById('sb-list');
+  const items = filter
+    ? [...state.discovered].reverse().filter(e=>e.name.toLowerCase().includes(filter.toLowerCase()))
+    : [...state.discovered].reverse();
+
+  list.innerHTML = '';
+  items.forEach(el=>{
+    const div = document.createElement('div');
+    div.className = 'sb-item';
+    const cls = el.danger?'rd':`r${el.rarity}`;
+
+    div.innerHTML = `
+      <span class="sb-emoji">${el.emoji}</span>
+      <span class="sb-name">${el.name}</span>
+      <span class="sb-dot ${cls}"></span>
+    `;
+    div.addEventListener('pointerdown', e=>onSidebarDragStart(e, el));
+    div.title = el.desc || el.name;
+    list.appendChild(div);
+  });
+
+  document.getElementById('sb-count').textContent = state.discovered.length;
+  document.getElementById('stat-count').textContent = state.discovered.length;
+
+  const hint = document.getElementById('canvas-hint');
+  hint.classList.toggle('hide', state.canvasItems.length > 0);
+}
+
+function filterSidebar(v) {
+  sbFilter = v;
+  renderSidebar(v);
+}
+
+// ── SIDEBAR DRAG TO CANVAS ─────────────────────────────
+let sidebarDragEl = null;
+let sidebarDragData = null;
+let sidebarDragActive = false;
+
+function onSidebarDragStart(e, elData) {
+  e.preventDefault();
+  sidebarDragData = elData;
+  sidebarDragActive = true;
+
+  // Create ghost card following mouse
+  const ghost = document.createElement('div');
+  ghost.id = 'drag-ghost';
+  ghost.className = 'c-card ' + (elData.danger?'c-rd':`c-r${elData.rarity}`);
+  ghost.style.cssText = `pointer-events:none;z-index:2000;opacity:.85;transition:none;`;
+  ghost.innerHTML = `<span class="c-emoji">${elData.emoji}</span><span class="c-name">${elData.name}</span>`;
+  ghost.style.left = (e.clientX - 44)+'px';
+  ghost.style.top = (e.clientY - 40)+'px';
+  document.body.appendChild(ghost);
+  sidebarDragEl = ghost;
+
+  document.addEventListener('pointermove', onSidebarDragMove);
+  document.addEventListener('pointerup', onSidebarDragEnd);
+}
+
+function onSidebarDragMove(e) {
+  if (!sidebarDragActive) return;
+  sidebarDragEl.style.left = (e.clientX-44)+'px';
+  sidebarDragEl.style.top = (e.clientY-40)+'px';
+}
+
+function onSidebarDragEnd(e) {
+  if (!sidebarDragActive) return;
+  sidebarDragActive = false;
+  document.removeEventListener('pointermove', onSidebarDragMove);
+  document.removeEventListener('pointerup', onSidebarDragEnd);
+
+  // Check if dropped on canvas
+  const canvas = document.getElementById('canvas-wrap');
+  const cr = canvas.getBoundingClientRect();
+  if (e.clientX>cr.left && e.clientX<cr.right && e.clientY>cr.top && e.clientY<cr.bottom) {
+    const x = e.clientX - cr.left - 44;
+    const y = e.clientY - cr.top - 40;
+    addToCanvas(sidebarDragData, x, y);
+  }
+
+  sidebarDragEl.remove();
+  sidebarDragEl = null;
+  sidebarDragData = null;
+}
+
+// ── CANVAS MANAGEMENT ─────────────────────────────────
+function addToCanvas(elData, x, y) {
+  const canvas = document.getElementById('canvas-wrap');
+  const id = uid();
+
+  const card = document.createElement('div');
+  const rareCls = elData.danger?'c-rd':`c-r${elData.rarity}`;
+  card.className = `c-card ${rareCls}`;
+  card.dataset.id = id;
+
+  // Clamp to canvas
+  const cw = canvas.clientWidth, ch = canvas.clientHeight;
+  x = Math.max(0, Math.min(x, cw-100));
+  y = Math.max(0, Math.min(y, ch-80));
+
+  card.style.left = x+'px';
+  card.style.top = y+'px';
+  card.innerHTML = `
+    <span class="c-emoji">${elData.emoji}</span>
+    <span class="c-name">${elData.name}</span>
+    <span class="c-del" title="Supprimer">✕</span>
+  `;
+
+  const item = { id, el: card, data: elData };
+  state.canvasItems.push(item);
+  canvas.appendChild(card);
+
+  card.querySelector('.c-del').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    removeFromCanvas(id);
+  });
+
+  setupCardDrag(item);
+  updateHint();
+
+  // Appear animation
+  card.style.transform = 'scale(0)';
+  card.style.transition = 'transform .25s cubic-bezier(.34,1.56,.64,1)';
+  requestAnimationFrame(()=>{ card.style.transform = '' });
+  setTimeout(()=>{ card.style.transition = '' }, 300);
+}
+
+function removeFromCanvas(id) {
+  const idx = state.canvasItems.findIndex(i=>i.id===id);
+  if (idx===-1) return;
+  const item = state.canvasItems[idx];
+  item.el.remove();
+  state.canvasItems.splice(idx,1);
+  updateHint();
+}
+
+function clearCanvas() {
+  state.canvasItems.forEach(i=>i.el.remove());
+  state.canvasItems = [];
+  updateHint();
+}
+
+function updateHint() {
+  const hint = document.getElementById('canvas-hint');
+  hint.classList.toggle('hide', state.canvasItems.length > 0);
+}
+
+// ── CARD DRAG (WITHIN CANVAS) ──────────────────────────
+function setupCardDrag(item) {
+  item.el.addEventListener('pointerdown', e=>startCardDrag(e, item));
+}
+
+let activeDrag = null;
+
+function startCardDrag(e, item) {
+  if (e.target.classList.contains('c-del')) return;
+  e.preventDefault();
+  e.stopPropagation();
+
+  const canvas = document.getElementById('canvas-wrap');
+  const cr = canvas.getBoundingClientRect();
+  const cardRect = item.el.getBoundingClientRect();
+
+  activeDrag = {
+    item,
+    offX: e.clientX - cardRect.left,
+    offY: e.clientY - cardRect.top,
+    canvasRect: cr,
+  };
+
+  item.el.classList.add('dragging');
+  item.el.style.zIndex = 200;
+
+  document.addEventListener('pointermove', onCardDragMove);
+  document.addEventListener('pointerup', onCardDragEnd);
+}
+
+function onCardDragMove(e) {
+  if (!activeDrag) return;
+  const { item, offX, offY, canvasRect } = activeDrag;
+  const canvas = document.getElementById('canvas-wrap');
+  const cw = canvas.clientWidth, ch = canvas.clientHeight;
+  const cardW = item.el.offsetWidth, cardH = item.el.offsetHeight;
+
+  let nx = e.clientX - canvasRect.left - offX;
+  let ny = e.clientY - canvasRect.top - offY;
+  nx = Math.max(0, Math.min(nx, cw-cardW));
+  ny = Math.max(0, Math.min(ny, ch-cardH));
+
+  item.el.style.left = nx+'px';
+  item.el.style.top = ny+'px';
+
+  // Visual feedback: check overlap with other cards
+  const dragRect = item.el.getBoundingClientRect();
+  const dragCX = dragRect.left + dragRect.width/2;
+  const dragCY = dragRect.top + dragRect.height/2;
+
+  state.canvasItems.forEach(other=>{
+    if (other.id===item.id) return;
+    const or = other.el.getBoundingClientRect();
+    const overlaps = dragCX > or.left && dragCX < or.right && dragCY > or.top && dragCY < or.bottom;
+    other.el.classList.toggle('will-combine', overlaps);
+  });
+}
+
+function onCardDragEnd(e) {
+  if (!activeDrag) return;
+  document.removeEventListener('pointermove', onCardDragMove);
+  document.removeEventListener('pointerup', onCardDragEnd);
+
+  const { item } = activeDrag;
+  item.el.classList.remove('dragging');
+  item.el.style.zIndex = '';
+  activeDrag = null;
+
+  // Check for overlap → combine
+  const dragRect = item.el.getBoundingClientRect();
+  const dragCX = dragRect.left + dragRect.width/2;
+  const dragCY = dragRect.top + dragRect.height/2;
+
+  let target = null;
+  for (const other of state.canvasItems) {
+    if (other.id===item.id) continue;
+    other.el.classList.remove('will-combine');
+    const or = other.el.getBoundingClientRect();
+    if (dragCX > or.left && dragCX < or.right && dragCY > or.top && dragCY < or.bottom) {
+      target = other; break;
+    }
+  }
+
+  if (target) {
+    triggerCombine(item, target);
+  }
+}
+
+// ── COMBINATION LOGIC ──────────────────────────────────
+function triggerCombine(itemA, itemB) {
+  const key = ck(itemA.data.name, itemB.data.name);
+  let result = COMBOS[key];
+
+  if (!result) {
+    result = smartFallback(itemA.data, itemB.data);
+  }
+
+  // Get center of target for result card position
+  const targetRect = itemB.el.getBoundingClientRect();
+  const canvas = document.getElementById('canvas-wrap');
+  const cr = canvas.getBoundingClientRect();
+  const cx = targetRect.left - cr.left;
+  const cy = targetRect.top - cr.top;
+
+  // Animate both cards out
+  itemA.el.classList.add('combining');
+  itemB.el.classList.add('combining');
+
+  // Spawn particles
+  const midX = (itemA.el.getBoundingClientRect().left + targetRect.left) / 2 + 44;
+  const midY = (itemA.el.getBoundingClientRect().top + targetRect.top) / 2 + 40;
+  spawnParticles(midX, midY, result.danger);
+
+  // Flash
+  const flash = document.createElement('div');
+  flash.className = 'result-flash';
+  document.body.appendChild(flash);
+  setTimeout(()=>flash.remove(), 500);
+
+  const isNew = !isKnown(result.name);
+  if (isNew) {
+    state.discovered.push({...result, id:uid()});
+    saveState();
+    renderSidebar(sbFilter);
+    // Flash new item in sidebar
+    setTimeout(()=>{
+      const sbItems = document.querySelectorAll('.sb-item');
+      if (sbItems[0]) sbItems[0].classList.add('flash');
+    }, 100);
+  }
+
+  // Remove old cards after animation
+  setTimeout(()=>{
+    removeFromCanvas(itemA.id);
+    removeFromCanvas(itemB.id);
+    // Add result card
+    addToCanvas(result, cx, cy);
+
+    // Show result notification
+    if (isNew || result.rarity >= 3) {
+      if (result.rarity >= 4) showModal(result);
+      else showToast(result, isNew);
+    } else {
+      showToast(result, false);
+    }
+
+    // Screen shake for dangerous
+    if (result.danger) {
+      document.getElementById('app').classList.add('shaking');
+      setTimeout(()=>document.getElementById('app').classList.remove('shaking'), 400);
+    }
+  }, 260);
+}
+
+// ── PARTICLES ──────────────────────────────────────────
+function spawnParticles(cx, cy, danger=false) {
+  const colors = danger
+    ? ['#ef4444','#f97316','#dc2626','#fca5a5']
+    : ['#7c4dff','#ec4899','#f59e0b','#3b82f6','#ffffff'];
+
+  for (let i=0; i<20; i++) {
+    const s = document.createElement('div');
+    s.className = 'spark';
+    const ang = (i/20)*Math.PI*2;
+    const dist = 40 + Math.random()*60;
+    const ex = Math.cos(ang)*dist, ey = Math.sin(ang)*dist;
+    const size = 3+Math.random()*5;
+    const color = colors[Math.floor(Math.random()*colors.length)];
+    const duration = .4+Math.random()*.5;
+    s.style.cssText = `
+      left:${cx}px;top:${cy}px;
+      width:${size}px;height:${size}px;
+      background:${color};
+      --se:translate(${ex}px,${ey}px);
+      --sd:${duration}s;
+      box-shadow:0 0 6px ${color};
+    `;
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), duration*1000);
+  }
+
+  // Floaty emoji
+  for (let i=0; i<4; i++) {
+    const f = document.createElement('div');
+    f.className = 'floaty';
+    f.textContent = danger ? '💥' : ['✨','⭐','🔥','💫'][i%4];
+    f.style.left = (cx-20+Math.random()*40)+'px';
+    f.style.top = (cy-20)+'px';
+    f.style.animationDelay = (i*.1)+'s';
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(), 1200);
+  }
+}
+
+// ── TOAST ──────────────────────────────────────────────
+let toastTimer = null;
+
+function showToast(result, isNew) {
+  const t = document.getElementById('toast');
+  document.getElementById('t-emoji').textContent = result.emoji;
+  document.getElementById('t-name').textContent = result.name;
+  document.getElementById('t-desc').textContent = result.desc || '';
+
+  const label = document.getElementById('t-label');
+  t.className = '';
+
+  if (result.danger && isNew) {
+    label.textContent = '☠️ Découverte Dangereuse!';
+    label.className = 't-label ldanger';
+    t.classList.add('t-danger');
+  } else if (result.rarity>=3 && isNew) {
+    label.textContent = '✦ Découverte Légendaire!';
+    label.className = 't-label llegend';
+    t.classList.add('t-legend');
+  } else if (isNew) {
+    label.textContent = '✦ Nouvelle Découverte';
+    label.className = 't-label lnew';
+    t.classList.add('t-new');
+  } else {
+    label.textContent = 'Combinaison';
+    label.className = 't-label';
+  }
+
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ── MODAL (MYTHIC) ─────────────────────────────────────
+function showModal(result) {
+  document.getElementById('m-emoji').textContent = result.emoji;
+  document.getElementById('m-name').textContent = result.name;
+  document.getElementById('m-desc').textContent = result.desc || 'Une découverte extraordinaire.';
+
+  const badge = document.getElementById('m-badge');
+  if (result.danger) {
+    badge.textContent = '☠️ CATASTROPHE MYTHIQUE';
+    badge.style.cssText = 'background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.5);color:#fca5a5';
+  } else {
+    badge.textContent = '✦ DÉCOUVERTE MYTHIQUE';
+    badge.style.cssText = '';
+  }
+
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('show');
+}
+
+// ── RESET ──────────────────────────────────────────────
+function resetGame() {
+  if (!confirm('Effacer toutes les découvertes de ce mode?')) return;
+  const all = getSaved();
+  delete all[state.mode];
+  localStorage.setItem('cc_v2', JSON.stringify(all));
+  clearCanvas();
+  const modeData = MODES[state.mode];
+  state.discovered = modeData.starts.map(e=>({...e,id:uid()}));
+  renderSidebar();
+}
+
+// ── STARFIELD ──────────────────────────────────────────
+function buildStarfield() {
+  const sf = document.getElementById('starfield');
+  const count = 120;
+  for (let i=0; i<count; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random()<.8 ? 1 : Math.random()<.7 ? 1.5 : 2.5;
+    s.style.cssText = `
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      width:${size}px;height:${size}px;
+      --d:${2+Math.random()*4}s;
+      --del:${Math.random()*4}s;
+      --op:${.3+Math.random()*.7};
+    `;
+    sf.appendChild(s);
+  }
+}
+
+// ── KEYBOARD SHORTCUT ──────────────────────────────────
+document.addEventListener('keydown', e=>{
+  if (e.key==='Escape') closeModal();
+  if (e.key==='Delete' || e.key==='Backspace') clearCanvas();
+});
+
+// ── BOOT ───────────────────────────────────────────────
+buildStarfield();
+initGame('normal');
+</script>
+</body>
+</html>
